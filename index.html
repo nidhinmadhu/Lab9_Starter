@@ -69,39 +69,85 @@
     </form>
 
     <section id="error-btns">
-      <button>Console Log</button>
-      <button>Console Error</button>
-      <button>Console Count</button>
-      <button>Console Warn</button>
-      <button>Console Assert</button>
-      <button>Console Clear</button>
-      <button>Console Dir</button>
-      <button>Console dirxml</button>
-      <button>Console Group Start</button>
-      <button>Console Group End</button>
-      <button>Console Table</button>
-      <button>Start Timer</button>
-      <button>End Timer</button>
-      <button>Console Trace</button>
-      <button>Trigger a Global Error</button>
+      <button onClick="console.log('Button Pressed')">Console Log</button>
+      <button onClick="console.error('Error!')">Console Error</button>
+      <button onClick="console.count('operator')">Console Count</button>
+      <button onClick="console.warn('Check your code!')">Console Warn</button>
+      <button onClick="assertPressed()">Console Assert</button>
+      <button onClick="console.clear()">Console Clear</button>
+      <button onClick="showButtons()">Console Dir</button>
+      <button onClick="showButtons()">Console dirxml</button>
+      <button onClick="startGroup()">Console Group Start</button>
+      <button onClick="endGroup()">Console Group End</button>
+      <button onClick="showTable()">Console Table</button>
+      <button onClick="console.time('Timer!')">Start Timer</button>
+      <button onClick="console.timeEnd('Timer!')">End Timer</button>
+      <button onClick="console.trace()">Console Trace</button>
+      <button onClick="globalError()">Trigger a Global Error</button>
     </section>
   </main>
 
+<script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+<script>
+  window.TrackJS && TrackJS.install({ 
+    token: "049d18c9b207414c89e25c6247418f23"
+    // for more configuration options, see https://docs.trackjs.com
+  });
+</script>
+                        
   <script>
+    TrackJS.track('Testing TrackJS!');                 
     let form = document.querySelector('form');
+    let result;
     form.addEventListener('submit', e => {
       e.preventDefault();
       let output = document.querySelector('output');
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      try {
+        result = eval(`${firstNum} ${operator} ${secondNum}`);
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch (e) {
+        console.error(e instanceof SyntaxError);
+        console.error("Please input two numbers");
+      } finally{
+        console.log("Awaiting Action...");
+      }
+      try {
+        throw new Error("Its tough using a calculator");
+      } catch (e) {
+        console.log(e.message); 
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
-
+    
     // Start your code here
     // You may move this JS to another file if you wish
+
+    function assertPressed(){
+      console.assert(result == parseInt(result, 10), {errorMsg: "Output is not an integer."});
+    }
+    function showButtons(){
+      console.dir(errorBtns);
+    }
+    function startGroup(){
+      console.group();
+      console.log("New Group");
+    }
+    function endGroup(){
+      console.groupEnd();
+      console.log("Close Group");
+    }
+    function showTable(){
+      console.table(errorBtns);
+    }
+    function globalError(){
+      alert("ERROR! ITS BUGGED")
+    }
+  
+    
   </script>
 </body>
 
